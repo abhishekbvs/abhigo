@@ -1,3 +1,4 @@
+
 var express = require('express');
 var app = express();
 var mysql = require('mysql');
@@ -23,14 +24,10 @@ app.post('/userpage:id/place:p_id/hotel:h_id/check',function(req,res){
         var u_id = req.params.id;
         var p_id = req.params.p_id;
         var h_id = req.params.h_id;
+        var name;
         var n=req.body.nof;
-        console.log(n);
-        var rooms = req.body.rooms
-        var Date1=req.body.Date1;
-        var Date2=req.body.Date2;
-        console.log(rooms);
-        console.log(Date1);
-          
+       
+   
     con.query('select Name from userids where id =?',u_id, function(error,result1,fields){
             if(error){
                 res.send({
@@ -38,18 +35,20 @@ app.post('/userpage:id/place:p_id/hotel:h_id/check',function(req,res){
                 });
                     }
             else{
-                var name=result1[0].Name;
+                name=result1[0].Name;
                 console.log(name);
-                con.query('select hotelname from hotels where (hid='+h_id+' and place_id='+p_id+')',function(error,result2,fields){
+                
+                con.query('select hotelname, remaining from hotels where (hid='+h_id+' and place_id='+p_id+')',function(error,result2,fields){
                     
                     var hotelname=result2[0].hotelname;
+                    var rooms=result2[0].remaining;
                     console.log(hotelname);
                     console.log(rooms);
                     console.log(n);
                     if(n<=rooms)
                     {
                         rooms=rooms-n;
-                        con.query("UPDATE Bookings SET remaining = remaining-"+n+" WHERE date between '"+Date1+"' and '"+Date2+"' order by date");
+                        con.query('UPDATE hotels SET remaining ='+rooms+' WHERE (hid='+h_id+' and place_id='+p_id+')');
                         res.render( path.join(__dirname+ "/" + "htmlfiles/bookingsuccess"),{Name:name, Userid:u_id, Placeid:p_id, Hotelid:h_id,HotelName:hotelname});
                     }
                     else
@@ -57,62 +56,45 @@ app.post('/userpage:id/place:p_id/hotel:h_id/check',function(req,res){
                          res.render( path.join(__dirname+ "/" + "htmlfiles/bookingfail"),{Name:name, Userid:u_id, Placeid:p_id, Hotelid:h_id,HotelName:hotelname});
                     }
                     
-                    });
+                });
                 
-                                                
+                
+                
+                
                 }
     });
     
     
 });
-app.post('/userpage:id/place:p_id/hotel',function(req,res){
+app.get('/userpage:id/place:p_id/hotel:h_id',function(req,res){
         var u_id = req.params.id;
         var p_id = req.params.p_id;
-        var response ={ 
-                    H_id:req.body.hotelid,
-                    Date1:req.body.date1,
-                    Date2:req.body.date2,
-                    };
-    console.log(u_id);
-    console.log(p_id);
-    console.log(response.Date1);
-    console.log(response.Date2);
-    con.query('select Name from userids where id =?',u_id, function(error,result1,fields){
+        var h_id = req.params.h_id;
+    
+    con.query('select Name from userids where id =?',u_id, function(error,result,fields){
             if(error){
                 res.send({
                     "failed":"error occured"
                 });
                     }
             else{
-                con.query("select min(remaining) from Bookings where date between '"+response.Date1+"' and '"+response.Date2+"' order by date",
-                function(error,result2,fields){
-                if(error){
-                    res.send({
-                    "failed":"error occured"
-                            });
-                    }
-                else{
-                    var x = 'min(remaining)';
-                    console.log(result2[0][x]);
-                    res.render( path.join(__dirname+ "/" + "htmlfiles/bookingpage"),{Name:result1[0].Name, Userid:u_id, Placeid:p_id,   Hotelid:response.H_id,n:result2[0][x], Date1:response.Date1, Date2:response.Date2});
-                    }
-                        });
+                res.render( path.join(__dirname+ "/" + "htmlfiles/bookingpage"),{Name:result[0].Name, Userid:u_id, Placeid:p_id, Hotelid:h_id});
                 }
-    });
+    })
     
 });
 app.get('/userpage:id/place:p_id',function(req,res){
         var u_id = req.params.id;
         var p_id = req.params.p_id;
     
-    con.query('select place_name from places where place_id =?',p_id, function(error,result,fields){
+    con.query('select Name from userids where id =?',u_id, function(error,result,fields){
             if(error){
                 res.send({
                     "failed":"error occured"
                 });
                     }
             else{
-                res.render( path.join(__dirname+ "/" + "htmlfiles/hotels"),{PlaceName:result[0].place_name, p_id:p_id, u_id:u_id });
+                res.render( path.join(__dirname+ "/" + "htmlfiles/hotels"),{Name:result[0].Name, Userid:u_id, Placeid:p_id});
                 }
     })
     

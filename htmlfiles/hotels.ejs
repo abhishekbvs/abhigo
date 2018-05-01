@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Now book your hotels</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/hotels.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
+</head>
+<body>
+<nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="/homepage">Abhigo</a>
+            </div>
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="/home">Home</a></li>
+              <li><a href="#">Deals</a></li>
+              <li><a href="userpage<%= u_id %>/profile">My Profile</a></li>
+                <li><a href="">Help</a></li>
+            </ul>
+          </div>
+        </nav>
+    
+<div class="container-fluid" id="bookingbox" style="height:700px">  
+<div class ="row" >
+    <div class="col-md-4" >
+    </div>
+    
+    <div class="col-md-4" id="box">
+        <form action="/userpage<%= u_id %>/place<%= p_id %>/hotel" Method="POST">
+          <div class="form-group">
+            <label name="placename">Place: <%= PlaceName %></label><br>
+            <label for="text" >Hotel:</label>
+            <select class="form-control" name="hotelid">
+				<option value="0" >Select a Hotel </option>
+				<option value="1">Tea valley Restaurant</option>
+                <option value="2">The tall trees munnar</option>
+				<option value="3">Wayand Silver hoods</option>
+              </select> 
+          </div>
+          <div class="form-group">
+            <label for="date">Check In Date:</label>
+            <input type="date" class="form-control" name="date1">
+          </div>
+        <div class="form-group">
+            <label for="date">Check Out Date:</label>
+            <input type="date" class="form-control" name="date2">
+          </div>
+
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form> 
+    </div>
+    </div>
+    </div>
+    
+    <div class="row">
+    <div class="col-md-4">
+      <div class="thumbnail">
+        <a href="">
+          <img src="/hh1.jpg" style="width:100%">
+          <div class="caption">
+            <p>Tea valley Restaurant</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="thumbnail">
+        <a href="" >
+          <img src="/hh2.jpg" style="width:100%" >
+          <div class="caption">
+            <p>The tall trees munnar</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="thumbnail">
+        <a href="">
+          <img src="/hh3.jpg" style="width:100%">
+          <div class="caption">
+            <p>Wayand Silver hoods</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+    
+   
+    
+</body>
+</html>
